@@ -1,15 +1,16 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using webApiVS.DataContest;
 using webApiVS.Models;
 
 namespace webApiVS.Service.ContatoService
 {
     public class ContatoService : IContatoInterface
-    {   //apenas leitura
+    {
         private readonly AplicationDbContext _context;
-        //injeção de dependencia 
+
         public ContatoService(AplicationDbContext context)
         {
             _context = context;
@@ -20,6 +21,8 @@ namespace webApiVS.Service.ContatoService
 
             try
             {
+                System.Diagnostics.Trace.WriteLine("CreateContato - Início");
+
                 if (novoContato == null)
                 {
                     serviceResponse.Dados = null;
@@ -28,21 +31,53 @@ namespace webApiVS.Service.ContatoService
 
                     return serviceResponse;
                 }
-                //adiciouna um contato novo 
+
+                if (string.IsNullOrWhiteSpace(novoContato.Nome))
+                {
+                    serviceResponse.Mensagem = "O campo 'Nome' é obrigatório.";
+                    serviceResponse.Sucesso = false;
+                    return serviceResponse;
+                }
+
+                Regex regexEmail = new Regex(@"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$");
+                if (!regexEmail.IsMatch(novoContato.Email))
+                {
+                    serviceResponse.Mensagem = "O formato do e-mail é inválido.";
+                    serviceResponse.Sucesso = false;
+                    return serviceResponse;
+                }
+
+
+                Regex regexTelefone = new Regex(@"^\(?\d{2}\)?[\s-]?\d{4,5}-?\d{4}$");
+                if (!regexTelefone.IsMatch(novoContato.Telefone))
+                {
+                    serviceResponse.Mensagem = "O formato do telefone é inválido.";
+                    serviceResponse.Sucesso = false;
+                    return serviceResponse;
+                }
+
+                novoContato.Data = DateTime.Now.ToLocalTime();
+
+
                 _context.Add(novoContato);
-                //salvou no banco 
+
                 await _context.SaveChangesAsync();
-                //consulta geral no banco 
+
+
                 serviceResponse.Dados = _context.Contatos.ToList();
 
 
             }
+
             catch (Exception ex)
             {
                 serviceResponse.Mensagem = ex.Message;
                 serviceResponse.Sucesso = false;
+
+
             }
-            //o qure retorna da nova cosulta
+
+
             return serviceResponse;
         }
 
@@ -83,7 +118,7 @@ namespace webApiVS.Service.ContatoService
             ServiceResponse<ContatoModel> serviceResponse = new ServiceResponse<ContatoModel>();
 
             try
-            {   //o x é um contatoModel com todas suas propriedades aqui pega o ID, esta sendo armazenado na variavel connato
+            {
                 ContatoModel contato = _context.Contatos.FirstOrDefault(x => x.Id == id);
 
                 if (contato == null)
@@ -106,7 +141,7 @@ namespace webApiVS.Service.ContatoService
         public async Task<ServiceResponse<List<ContatoModel>>> GetContatos()
         {
             ServiceResponse<List<ContatoModel>> serviceResponse = new ServiceResponse<List<ContatoModel>>();
-            //colocando dentro do service dados todos os dados da tabela contatos
+
             try
             {
                 serviceResponse.Dados = _context.Contatos.ToList();
@@ -124,9 +159,9 @@ namespace webApiVS.Service.ContatoService
             }
             return serviceResponse;
         }
-        //dentro do editatoContato tem todos os seus dados
+
         public async Task<ServiceResponse<List<ContatoModel>>> UpdateContato(ContatoModel editadoContato)
-        {               //lista de contatos model
+        {
             ServiceResponse<List<ContatoModel>> serviceResponse = new ServiceResponse<List<ContatoModel>>();
 
             try
@@ -143,7 +178,7 @@ namespace webApiVS.Service.ContatoService
 
                 _context.Contatos.Update(editadoContato);
 
-                //para salvar a alteração feita
+
                 await _context.SaveChangesAsync();
 
                 serviceResponse.Dados = _context.Contatos.ToList();
@@ -156,8 +191,8 @@ namespace webApiVS.Service.ContatoService
             }
             return serviceResponse;
         }
-        
-        
+
+
 
 
     }

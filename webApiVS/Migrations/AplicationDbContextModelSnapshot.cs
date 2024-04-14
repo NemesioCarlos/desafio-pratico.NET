@@ -30,7 +30,7 @@ namespace webApiVS.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("Data")
+                    b.Property<DateTime>("DataDeCriacao")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
