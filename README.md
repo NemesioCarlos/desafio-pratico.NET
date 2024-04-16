@@ -1,7 +1,7 @@
-# titulo
+# Titulo
 Projeto de CRUD de Agenda em .NET 8.0 com Vue.js e PrimeVue
 
-Descrição
+# Descrição
 Este projeto é um CRUD de agenda simples desenvolvido em .NET 8.0 utilizando o Entity Framework para a camada de persistência de dados. O front-end está sendo construído em Vue.js com o auxílio do framework PrimeVue.
 
 
