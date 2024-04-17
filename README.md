@@ -9,7 +9,7 @@ Este projeto é um CRUD de agenda simples desenvolvido em .NET 8.0 utilizando o 
 Cadastro de Contatos: Adicione, edite e remova contatos da sua agenda.
 Visualização de Contatos: Veja a lista de contatos existentes.
 Pesquisa de Contatos: Realize buscas por nome, telefone ou outros critérios.
-Integração com Banco de Dados: Utilize o Entity Framework para persistir os dados.
+
 
 # :heavy_check_mark: Tecnologias Utilizadas:
 .NET 8.0: Plataforma de desenvolvimento para a criação da API.
@@ -25,6 +25,7 @@ Clone este repositório.
 Navegue até a pasta do projeto backend.
 Execute dotnet restore para restaurar as dependências.
 Execute dotnet run para iniciar o servidor.
+
 
 Frontend:
 Certifique-se de ter o Node.js e o Vue CLI instalados.
